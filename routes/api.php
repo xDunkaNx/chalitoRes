@@ -35,3 +35,12 @@ Route::group(['middleware' => ["auth:api"]], function() {
     Route::get('/infoUser',[AuthController::class, 'infoUser']);
     Route::get('/logOut',[AuthController::class, 'logOut']);
 });
+
+Route::post('/createOrUpdateCategory',[CategoryController::class, 'createOrUpdateCategory']);
+Route::get('/getCategory',[CategoryController::class, 'getCategory']);
+Route::get('/getCategoryName',[CategoryController::class, 'getCategoryName']);
+
+Route::post('/createOrUpdateProduct',[ProductController::class, 'createOrUpdateProduct']);
+Route::get('/getProduct',[ProductController::class, 'getProduct']);
+Route::delete('/deleteProduct',[ProductController::class, 'deleteProduct']);
+
