@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -13,15 +14,21 @@ class UserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'idRole' => 'numeric',
+                  'idRole' => 'required|numeric',
                 'userName' => 'required|string|max:255',
                 'password' => 'required|string|min:6', //123456
                 'password' => 'required|confirmed', //se valida confirmacion de pass el campo enviado seria password_confirmation
             ]);
+            $userNameSerarch = DB::table('users')->where("userName","=", $validatedData["userName"])->first();
+            if ($userNameSerarch) {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "el nombre del usuario ya existe"
+                ]);
+            }
             $idRole = $validatedData['idRole'];
             $roleName = DB::table('roles')->select("name")->where("id","=", $idRole)
             ->first();
-            var_dump($roleName->name);die;
             $user = User::create([
                 'userName' => $validatedData['userName'],
                 'password' => Hash::make($validatedData['password'])
