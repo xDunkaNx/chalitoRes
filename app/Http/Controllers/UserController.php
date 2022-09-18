@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -39,6 +38,18 @@ class UserController extends Controller
                 'status' => SELF::STATUS_TRUE,
                 'msg' => "Registro de usuario exitoso",
                 'access_token' => $token,
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    public function getAllUser(){
+        try 
+        {
+            $users = DB::table('users')->select("id","userName","email")->get();
+            return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'users' => $users
             ]);
         } catch (\Throwable $th) {
             throw $th;

@@ -32,10 +32,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::post("Auth/register",[AuthContoller::class, 'register'])->name('Auth.register');
 Route::post('/login',[AuthController::class, 'login']);
 
-Route::group(['middleware' => ["auth:api"]], function() {
+Route::group(['middleware' => ["auth:api", "role:Admin"]], function() {
     Route::post('/register',[UserController::class, 'register']);
     Route::get('/infoUser',[AuthController::class, 'infoUser']);
     Route::get('/logOut',[AuthController::class, 'logOut']);
+
+    Route::get('/getAllUser',[UserController::class, 'getAllUser']);
+
     Route::post('/createOrUpdateCategory',[CategoryController::class, 'createOrUpdateCategory']);
     Route::get('/getCategory',[CategoryController::class, 'getCategory']);
     Route::get('/getCategoryName',[CategoryController::class, 'getCategoryName']);
