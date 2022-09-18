@@ -11,6 +11,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     const STATUS_TRUE = true;
-    const IS_ACTIVE = true;
     const STATUS_FALSE = false;
+    const IS_ACTIVE = true;
+    const IS_DEACTIVE = false;
 }

@@ -94,4 +94,36 @@ class UserController extends Controller
             throw $th;
         }
     }
+    public function changeStatusUser(Request $request){
+        try 
+        {
+            $user = User::find($request["idUser"]);
+            if (isset($user)) {
+                if ($request["status"]) {
+                    DB::table('users')
+                    ->where('id',"=", $request["idUser"])
+                    ->update(['status' => SELF::STATUS_TRUE]);
+                    return response()->json([
+                        'status' => SELF::STATUS_TRUE,
+                        'msg' => "Se activo el usuario correctamente"
+                    ]);
+                }else{
+                    DB::table('users')
+                    ->where('id',"=", $request["idUser"])
+                    ->update(['status' => SELF::STATUS_FALSE]);
+                    return response()->json([
+                        'status' => SELF::STATUS_TRUE,
+                        'msg' => "Se desactivo el usuario correctamente"
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'users' => "Id de usuario no encontrado"
+                ]);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

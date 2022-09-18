@@ -40,6 +40,7 @@ Route::group(['middleware' => ["auth:api", "role:Admin"]], function() {
     Route::get('/getAllUser',[UserController::class, 'getAllUser']);
     Route::get('/{idUser}',[UserController::class, 'getUser']);
     Route::delete('/{idUser}',[UserController::class, 'deleteUser']);
+    Route::post('/changeStatusUser',[UserController::class, 'changeStatusUser']);
     
     Route::post('/createOrUpdateCategory',[CategoryController::class, 'createOrUpdateCategory']);
     Route::get('/getCategory',[CategoryController::class, 'getCategory']);
