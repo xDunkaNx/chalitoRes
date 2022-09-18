@@ -74,4 +74,24 @@ class UserController extends Controller
             throw $th;
         }
     }
+    public function deleteUser(Request $request){
+        try 
+        {
+            $user = User::find($request["id"]);
+            if (isset($user)) {
+                $user->delete();
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "Usuario eliminado correctamente"
+                ]);
+            }else{
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'users' => "Id de usuario no encontrado"
+                ]);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
