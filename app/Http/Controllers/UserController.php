@@ -55,4 +55,23 @@ class UserController extends Controller
             throw $th;
         }
     }
+    public function getUser(Request $request){
+        try 
+        {
+            $user = DB::table('users')->where("id","=",$request["idUser"])->first();
+            if (isset($user)) {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'users' => $user
+                ]);
+            }else{
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'users' => "Id de usuario no encontrado"
+                ]);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
