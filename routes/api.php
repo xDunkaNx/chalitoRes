@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,10 @@ Route::get('/logOut',[AuthController::class, 'logOut']);
     Route::post('/createOrUpdateProduct',[ProductController::class, 'createOrUpdateProduct'])->middleware(["auth:api","permission:createOrUpdateProduct,api"]);
     Route::get('/getProduct',[ProductController::class, 'getProduct'])->middleware(["auth:api","permission:getProduct,api"]);
     Route::delete('/deleteProduct',[ProductController::class, 'deleteProduct'])->middleware(["auth:api","permission:deleteProduct,api"]);
+
+    Route::post('/createRole',[RoleController::class, 'createRole'])->middleware(["auth:api","permission:createRole,api"]);
+    Route::post('/assigRoleToUser',[RoleController::class, 'assigRoleToUser'])->middleware(["auth:api","permission:assigRoleToUser,api"]);
+    Route::post('/assigPermissionToRole',[RoleController::class, 'assigPermissionToRole'])->middleware(["auth:api","permission:assigPermissionToRole,api"]);
 // });
 
 

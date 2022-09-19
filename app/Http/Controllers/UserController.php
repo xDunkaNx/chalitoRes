@@ -19,7 +19,7 @@ class UserController extends Controller
                 'password' => 'required|confirmed', //se valida confirmacion de pass el campo enviado seria password_confirmation
             ]);
             $userNameSerarch = DB::table('users')->where("userName","=", $validatedData["userName"])->first();
-            if ($userNameSerarch) {
+            if (isset($userNameSerarch)) {
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
                     'msg' => "el nombre del usuario ya existe"
