@@ -23,7 +23,11 @@ class RoleSeeder extends Seeder
       $roleCosinero = Role::create(["name" => "Cosinero"]);
       $roleMesero = Role::create(["name" => "Mesero"]);
       
+      Permission::create(["name" => 'register'])->assignRole($roleAdmin);
       Permission::create(["name" => 'getAllUser'])->assignRole($roleAdmin);
+      Permission::create(["name" => 'getUser'])->assignRole($roleAdmin);
+      Permission::create(["name" => 'deleteUser'])->assignRole($roleAdmin);
+      Permission::create(["name" => 'changeStatusUser'])->assignRole($roleAdmin);
 
       Permission::create(["name" => 'createOrUpdateCategory'])->assignRole($roleAdmin);
       Permission::create(["name" => 'getCategory'])->assignRole($roleAdmin);
@@ -32,5 +36,7 @@ class RoleSeeder extends Seeder
       Permission::create(["name" => 'createOrUpdateProduct'])->assignRole($roleAdmin);
       Permission::create(["name" => 'deleteProduct'])->assignRole($roleAdmin);
       Permission::create(["name" => 'getProduct'])->assignRole($roleAdmin);
+
+      Permission::create(["name" => 'infoUser'])->syncRoles([$roleAdmin, $roleCajero, $roleCosinero, $roleMesero]);
     }
 }
