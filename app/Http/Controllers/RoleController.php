@@ -9,7 +9,6 @@ use Spatie\Permission\Models\Role;
 class RoleController extends Controller
 {
     public function createRole (Request $request) {
-        // var_dump("hola");die;
         try {
             $userNameSerarch = DB::table('roles')->where("name","=", $request["name"])->first();
             if (isset($userNameSerarch)) {

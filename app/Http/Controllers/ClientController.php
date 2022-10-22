@@ -2,24 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Client;
 use App\Models\Person;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class ClientController extends Controller
 {
     public function register(Request $request)
     {
         try {
-            
             $validatedData = $request->validate([
-                        'idRole' => 'required|numeric'
-                    , 'userName' => 'required|string|max:255'
-                    , 'password' => 'required|string|min:6' //123456
-                    , 'password' => 'required|confirmed' //se valida confirmacion de pass el campo enviado seria password_confirmation
-                  , 'personName' => 'required|string|min:3|max:50'
+                        //'idRole' => 'required|numeric',
+                   'personName' => 'required|string|min:3|max:50'
             , 'personMiddleName' => 'required|string|min:3|max:50'
               , 'personLastName' => 'required|string|min:3|max:50'
                 , 'typeDocument' => 'required|string'
@@ -28,8 +24,8 @@ class UserController extends Controller
                    , 'cellPhone' => 'required|numeric'
             ]);
 
-            $userNameSearch = DB::table('users')->where("userName","=", $validatedData["userName"])->first();
-            if (isset($userNameSearch)) {
+            $userNameSerarch = DB::table('Persons')->where("userName","=", $validatedData["document"])->first();
+            if (isset($userNameSerarch)) {
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
                     'msg' => "el nombre del usuario ya existe"
@@ -63,14 +59,35 @@ class UserController extends Controller
                 'contactPhone' => array_key_exists('contactPhone', $validatedData) ? $validatedData['contactPhone'] : NULL,
                 'status' => SELF::STATUS_TRUE,
             ]);
-            $idRole = $validatedData['idRole'];
-            $roleName = DB::table('roles')->select("name")->where("id","=", $idRole)->first();
-
-            $user = User::create([
+            
+            
+            $client = Client::create([
                 'id' => $person->id,
-                'userName' => $validatedData['userName'],
-                'password' => Hash::make($validatedData['password'])
-            ])->assignRole($roleName->name);
+                'code' => $validatedData['document'],
+                'startDate' => '2022-12-01',
+                'isPensioner' => array_key_exists('isPensioner', $validatedData) ? $validatedData['isPensioner'] : 0,
+                'pricePensioner' => array_key_exists('pricePensioner', $validatedData) ? $validatedData['pricePensioner'] : '0.00',
+                'totalPoints' => array_key_exists('totalPoints', $validatedData) ? $validatedData['totalPoints'] : 0,
+                'availablePoints' => array_key_exists('availablePoints', $validatedData) ? $validatedData['availablePoints'] : 0,
+                'usedPoints' => array_key_exists('usedPoints', $validatedData) ? $validatedData['usedPoints'] : 0,
+                'cancelPoints' => array_key_exists('cancelPoints', $validatedData) ? $validatedData['cancelPoints'] : 0,
+                'isActive' => SELF::STATUS_TRUE,
+                'status' => SELF::STATUS_TRUE
+            ]);
+            
+            $createUser = array_key_exists('createUser', $validatedData) ? $validatedData['createUser'] : 0;
+            
+            if($createUser){
+                /*
+                $idRole = $validatedData['idRole'];
+                $roleName = DB::table('roles')->select("name")->where("id","=", $idRole)->first();
+                */
+                $user = User::create([
+                    'id' => $person->id,
+                    'userName' => $validatedData['document'],
+                    'password' => Hash::make($validatedData['document'])
+                ])->assignRole("CLIENT");
+            }
             
             $token = $user->createToken('authToken')->accessToken;
             DB::commit();
@@ -84,9 +101,9 @@ class UserController extends Controller
             throw $th;
         }
     }
-    public function getAllUser(){
-        try {
-
+    public function getAllClient(){
+        try 
+        {
             $users = DB::table('users')->select("id","userName","email")->get();
             return response()->json([
                 'status' => SELF::STATUS_TRUE,
@@ -96,9 +113,9 @@ class UserController extends Controller
             throw $th;
         }
     }
-    public function getUser(Request $request){
-        try {
-
+    public function getClient(Request $request){
+        try 
+        {
             $user = DB::table('users')->where("id","=",$request["idUser"])->first();
             if (isset($user)) {
                 return response()->json([
@@ -115,9 +132,9 @@ class UserController extends Controller
             throw $th;
         }
     }
-    public function deleteUser(Request $request){
-        try {
-
+    public function deleteClient(Request $request){
+        try 
+        {
             $user = User::find($request["id"]);
             if (isset($user)) {
                 $user->delete();
@@ -135,9 +152,9 @@ class UserController extends Controller
             throw $th;
         }
     }
-    public function changeStatusUser(Request $request){
-        try {
-
+    public function changeStatusClient(Request $request){
+        try 
+        {
             $user = User::find($request["idUser"]);
             if (isset($user)) {
                 if ($request["status"]) {
