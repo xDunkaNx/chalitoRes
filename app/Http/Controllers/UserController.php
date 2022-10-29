@@ -86,8 +86,7 @@ class UserController extends Controller
     }
     public function getAllUser(){
         try {
-
-            $users = DB::table('users')->select("id","userName","email")->get();
+            $users = DB::table('users')->where("isActive", '=', self::STATUS_TRUE)->get();
             return response()->json([
                 'status' => SELF::STATUS_TRUE,
                 'users' => $users

@@ -104,7 +104,7 @@ class ClientController extends Controller
     public function getAllClient(){
         try 
         {
-            $users = DB::table('users')->select("id","userName","email")->get();
+            $users = DB::table('users')->where("status", '=', self::STATUS_TRUE)->get();
             return response()->json([
                 'status' => SELF::STATUS_TRUE,
                 'users' => $users

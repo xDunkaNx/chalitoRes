@@ -27,9 +27,26 @@ class OfficeController extends Controller
             throw $th;
         }
     }
-    function getoffice ()  {
+    function getAllOfficeForSupport ()  {
         try {
             $allOffice = Office::get();
+            return $allOffice;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    function getAllOffice ()  {
+        try {
+            $allOffice = Office::where("status", '=', self::STATUS_TRUE)->get();
+            return $allOffice;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    function getOffice (Request $request)  {
+        try {
+            $validatedData = $request->validate(['idOffice' => 'required|numeric']);
+            $allOffice = Office::where("isActive", '=', self::STATUS_TRUE)->and_where("status", '=', self::STATUS_TRUE)->and_where("idOffice", "=", $validatedData['idOffice'])->get();
             return $allOffice;
         } catch (\Throwable $th) {
             throw $th;

@@ -53,4 +53,28 @@ class RoleController extends Controller
             throw $th;
         }
     }
+    function getAllRoleForSupport () {
+        try {
+            return Role::get();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    function getAllRole ()  {
+        try {
+            $allRole = Role::where("status", "=", self::STATUS_TRUE)->get();
+            return $allRole;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    function getRole (Request $request)  {
+        try {
+            $validatedData = $request->validate(['idRole' => 'required|numeric']);
+            $allRole = Role::where("isActive", '=', self::STATUS_TRUE)->and_where("status", "=", self::STATUS_TRUE)->and_where("id", "=", $validatedData['idRole'])->get();
+            return $allRole;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

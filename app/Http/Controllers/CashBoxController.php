@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class CashBoxController extends Controller
 {
-    function createCashBox () {
+    function createCashBox (Request $request) {
       try{
         $validatedData = $request->validate([
                   'idUser' => 'required|numeric'
@@ -35,7 +35,7 @@ class CashBoxController extends Controller
             throw $th;
       }
     }
-    function closeCashBox () {
+    function closeCashBox (Request $request) {
       try{
         $validatedData = $request->validate([
                   'idUser' => 'required|numeric'
@@ -88,8 +88,6 @@ class CashBoxController extends Controller
           
         }
         
-        
-
         DB::commit();
         return response()->json([
           'status' => SELF::STATUS_TRUE,
@@ -101,7 +99,21 @@ class CashBoxController extends Controller
       
     }
     function getAllCashBox ()  {
-      $allCategory = CashBox::get();
-      return $allCategory;
+      try {
+        $allCategory = CashBox::where("status", "=", self::STATUS_TRUE)->get();
+        return $allCategory;
+      } catch (\Throwable $th) {
+        throw $th;
+      }
     }
+    function getCashBoxForUser (Request $request)  {
+      try {
+        $validatedData = $request->validate(['idUser' => 'required|numeric']);
+        $allCategory = CashBox::where("isActive", '=', self::STATUS_TRUE)->and_where("status", "=", self::STATUS_TRUE)->and_where("idUser", "=", $validatedData['idUser'])->get();
+        return $allCategory;
+      } catch (\Throwable $th) {
+        throw $th;
+      }
+    }
+    
 }
