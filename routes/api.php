@@ -39,11 +39,12 @@ Route::get('/logOut',[AuthController::class, 'logOut']);
     
     Route::post('/register',[UserController::class, 'register'])->middleware(["auth:api","permission:register,api"]);
     Route::get('/getAllUser',[UserController::class, 'getAllUser'])->middleware(["auth:api","permission:getAllUser,api"]);
-    Route::get('/{idUser}',[UserController::class, 'getUser'])->middleware(["auth:api","permission:getUser,api"]);
-    Route::delete('/{idUser}',[UserController::class, 'deleteUser'])->middleware(["auth:api","permission:deleteUser,api"]);
+    //Route::get('/{idUser}',[UserController::class, 'getUser'])->middleware(["auth:api","permission:getUser,api"]);
+   // Route::delete('/{idUser}',[UserController::class, 'deleteUser'])->middleware(["auth:api","permission:deleteUser,api"]);
     Route::post('/changeStatusUser',[UserController::class, 'changeStatusUser'])->middleware(["auth:api","permission:changeStatusUser,api"]);
     
     Route::post('/createOrUpdateCategory',[CategoryController::class, 'createOrUpdateCategory'])->middleware(["auth:api","permission:createOrUpdateCategory,api"]);
+    Route::get('/getAllCategory',[CategoryController::class, 'getAllCategory'])->middleware(["auth:api"]);
     Route::get('/getCategory',[CategoryController::class, 'getCategory'])->middleware(["auth:api","permission:getCategory,api"]);
     Route::get('/getCategoryName',[CategoryController::class, 'getCategoryName'])->middleware(["auth:api","permission:getCategoryName,api"]);
     

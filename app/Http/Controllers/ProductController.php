@@ -65,7 +65,10 @@ class ProductController extends Controller
     function getProduct ()  {
         try {
             $allproduct = Product::get();
-            return $allproduct;
+            return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'products' => $allproduct
+            ]);
         } catch (\Throwable $th) {
             throw $th;
         }

@@ -58,8 +58,30 @@ class CategoryController extends Controller
             throw $th;
         }
     }
-    function getAllCategory ()  {
+    function getAllCategory (Request $request)  {
         try {
+            $validatedData = $request->validate(['idCategory' => 'numeric']);
+            // var_dump($validatedData['idCategory']);die;
+            if (isset($validatedData['idCategory'])) {
+                $idCategory = $validatedData["idCategory"];
+                //usar 'raw' es peligroso por la sql inyeccion, hay otra manera mas eficiente con selectRaw, pero aun estoy revisando la doc.
+                $categories = DB::table('categories')
+                ->select('id','categoryName', DB::raw("IF(id={$idCategory},1,2) as orden"))
+                ->orderBy('orden', 'asc')
+                ->get();
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'categories' => $categories
+                ]);
+            }       
+            else{
+               $categories  = Category::select('id','categoryName')->get();
+               return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'categories' => $categories
+            ]);
+                
+            }
             return Category::where("status", '=', self::STATUS_TRUE)->get();
         } catch (\Throwable $th) {
             throw $th;
@@ -68,7 +90,7 @@ class CategoryController extends Controller
     function getCategory (Request $request) {
         try {
             $validatedData = $request->validate(['idCategory' => 'required|numeric']);
-            return Category::where("isActive", '=', self::STATUS_TRUE)->and_where("status", "=", self::STATUS_TRUE)->and_where("id", "=", $validatedData['idCategory'])->get();
+            return DB::table('categories')->where("isActive", '=', self::STATUS_TRUE)->where("status", "=", self::STATUS_TRUE)->where("id", "=", $validatedData['idCategory'])->get();
         } catch (\Throwable $th) {
             throw $th;
         }
