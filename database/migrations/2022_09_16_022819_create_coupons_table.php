@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('idClient')->nullable();
+            // $table->unsignedBigInteger('idClient')->nullable();
+            $table->string('idClient');
             $table->string("code");
             $table->string("couponName");
             $table->date("startDate");
@@ -27,7 +28,7 @@ return new class extends Migration
             $table->boolean("status")->default(false);
             $table->timestamps();
 
-            $table->foreign('idClient')->references('id')->on('users');
+            // $table->foreign('idClient')->references('id')->on('users');
         });
     }
 
