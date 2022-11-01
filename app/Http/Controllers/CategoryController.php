@@ -61,8 +61,7 @@ class CategoryController extends Controller
     function getAllCategory (Request $request)  {
         try {
             $validatedData = $request->validate(['idCategory' => 'numeric']);
-            // var_dump($validatedData['idCategory']);die;
-            if (isset($validatedData['idCategory'])) {
+            if ($validatedData['idCategory'] != 0) {
                 $idCategory = $validatedData["idCategory"];
                 //usar 'raw' es peligroso por la sql inyeccion, hay otra manera mas eficiente con selectRaw, pero aun estoy revisando la doc.
                 $categories = DB::table('categories')

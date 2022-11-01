@@ -22,7 +22,7 @@ class ProductController extends Controller
                 'image' => 'required|string|max:255'
     
             ]);
-            if ($request["idProduct"] == null) {
+            if ($request["id"] == null) {
                 $product = new Product;
                 $product->idCategory = $validatedData["idCategory"];
                 $product->productName = $validatedData["productName"];
@@ -36,13 +36,17 @@ class ProductController extends Controller
                 $product->isActive = 1; 
                 $product->status = 1;
                 $product->save();
-                return 'Agregaste un nuevo producto correctamente';
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "Agregaste un nuevo producto correctamente"
+                ]);
             }
             else {
-                $product = Product::find($request["idProduct"]);
+                $product = Product::find($request["id"]);
                 if ($product == null) {
                     return 'El ID del producto que intenta actualizar no existe';
                 }
+                $product->idCategory = $validatedData["idCategory"];
                 $product->productName = $request["productName"];
                 $product->productShortName = $validatedData["productShortName"];
                 $product->description = $validatedData["description"];
@@ -54,7 +58,10 @@ class ProductController extends Controller
                 $product->isActive = 1; 
                 $product->status = 1;
                 $product->save();
-                return 'Actualizaste el registro correctamente';
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "Actualizaste el registro correctamente"
+                ]);
             }
         } catch (Throwable $th) {
             //report($th);
