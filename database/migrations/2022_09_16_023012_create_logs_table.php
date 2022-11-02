@@ -15,15 +15,14 @@ return new class extends Migration
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            // $table->unsignedBigInteger('idUser');
-            $table->string("idUser");
+            $table->unsignedBigInteger('idUser');
             $table->string("entity");
             $table->date("beforeData");
             $table->date("afterData");
             $table->boolean("status")->default(true);
             $table->timestamps();
 
-            // $table->foreign('idUser')->references('id')->on('users');
+            $table->foreign('idUser')->references('id')->on('users');
         });
     }
 

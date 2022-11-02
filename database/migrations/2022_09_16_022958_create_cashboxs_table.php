@@ -15,10 +15,8 @@ return new class extends Migration
     {
         Schema::create('cashboxs', function (Blueprint $table) {
             $table->id();
-            // $table->unsignedBigInteger('idUser');
-            // $table->unsignedBigInteger('idAdmin');
-            $table->string("idUser");
-            $table->string("idAdmin");
+            $table->unsignedBigInteger('idUser');
+            $table->unsignedBigInteger('idAdmin');
             $table->float("amountInitial");
             $table->date("openDate");
             $table->date("closeDate")->nullable();
@@ -26,8 +24,8 @@ return new class extends Migration
             $table->boolean("status")->default(true);
             $table->timestamps();
 
-            // $table->foreign('idUser')->references('id')->on('users');
-            // $table->foreign('idAdmin')->references('id')->on('users');
+            $table->foreign('idUser')->references('id')->on('users');
+            $table->foreign('idAdmin')->references('id')->on('users');
         });
     }
 

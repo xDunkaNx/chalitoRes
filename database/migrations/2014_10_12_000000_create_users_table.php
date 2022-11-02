@@ -14,7 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->string('id');
+            // $table->string('id');
+            $table->id();
+            $table->unsignedBigInteger('idUser');
             $table->string('userName');
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
@@ -23,6 +25,8 @@ return new class extends Migration
             $table->boolean("status")->default(true);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('idUser')->references('id')->on('persons');
         });
     }
 

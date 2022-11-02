@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 // Route::post("Auth/register",[AuthContoller::class, 'register'])->name('Auth.register');
 Route::post('/login',[AuthController::class, 'login']);
-Route::get('/logOut',[AuthController::class, 'logOut']);
+Route::get('/logOut',[AuthController::class, 'logOut'])->middleware(["auth:api","permission:infoUser,api"]);
 
 // Route::group(['middleware' => ["auth:api", "role:Admin"]], function() {
     Route::get('/infoUser',[AuthController::class, 'infoUser'])->middleware(["auth:api","permission:infoUser,api"]);

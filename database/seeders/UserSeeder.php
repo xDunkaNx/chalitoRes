@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::create([
+            'idUser' => 1,
             'userName' => "luis.guarniz",
             'email' => "luis.guarniz@hotmail.com",
             'password' => Hash::make('123456')
@@ -24,21 +25,22 @@ class UserSeeder extends Seeder
         )->assignRole("Admin");
 
         User::create([
+            'idUser' => 2,
             'userName' => "carlos.mendocilla",
             'email' => "carlos.mendocilla@hotmail.com",
             'password' => Hash::make('123456')
         ])->assignRole("Cajero");
 
-        User::create([
-            'userName' => "mario.david",
-            'email' => "mario.david@hotmail.com",
-            'password' => Hash::make('123456')
-        ])->assignRole("Cosinero");
+        // User::create([
+        //     'userName' => "mario.david",
+        //     'email' => "mario.david@hotmail.com",
+        //     'password' => Hash::make('123456')
+        // ])->assignRole("Cosinero");
 
-        User::create([
-            'userName' => "carlos.miranda",
-            'email' => "carlos.miranda@hotmail.com",
-            'password' => Hash::make('123456')
-        ])->assignRole("Mesero");
+        // User::create([
+        //     'userName' => "carlos.miranda",
+        //     'email' => "carlos.miranda@hotmail.com",
+        //     'password' => Hash::make('123456')
+        // ])->assignRole("Mesero");
     }
 }

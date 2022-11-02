@@ -16,8 +16,7 @@ return new class extends Migration
         Schema::create('offices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('idCity');
-            // $table->unsignedBigInteger('idManager');
-            $table->string("idManager");
+            $table->unsignedBigInteger('idManager');
             $table->string("officeName");
             $table->string("address");
             $table->string("phone")->nullable();
@@ -30,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('idCity')->references('id')->on('cities');
-            // $table->foreign('idManager')->references('id')->on('users');
+            $table->foreign('idManager')->references('id')->on('users');
         });
     }
 

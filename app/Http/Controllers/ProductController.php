@@ -16,7 +16,7 @@ class ProductController extends Controller
                 'productShortName' => 'required|string|max:255',
                 'whitPresentation' => 'required|string|max:255',
                 'description' => 'required|string|max:255',
-                'group' => 'required|in:COMIDA,BEBIDA,POSTRE',
+                //'group' => 'required|in:COMIDA,BEBIDA,POSTRE',
                 'precio' => 'required|numeric',
                 'code' => 'required|string|max:255',
                 'image' => 'required|string|max:255'
@@ -29,7 +29,7 @@ class ProductController extends Controller
                 $product->productShortName = $validatedData["productShortName"];
                 $product->description = $validatedData["description"];
                 $product->whitPresentation = $validatedData["whitPresentation"];
-                $product->group = $validatedData["group"];
+                //$product->group = $validatedData["group"];
                 $product->code = $validatedData["code"];
                 $product->image = $validatedData["image"];
                 $product->precio = $validatedData["precio"];
@@ -51,7 +51,7 @@ class ProductController extends Controller
                 $product->productShortName = $validatedData["productShortName"];
                 $product->description = $validatedData["description"];
                 $product->whitPresentation = $validatedData["whitPresentation"];
-                $product->group = $validatedData["group"];
+                //$product->group = $validatedData["group"];
                 $product->code = $validatedData["code"];
                 $product->image = $validatedData["image"];
                 $product->precio = $validatedData["precio"];
