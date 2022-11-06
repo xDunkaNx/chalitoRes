@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function register(Request $request)
+    public function createOrUpdateUser(Request $request)
     {
         try {
-            
+            // var_dump($request);die;
             $validatedData = $request->validate([
                         'idRole' => 'required|numeric'
                     , 'userName' => 'required|string|max:255'

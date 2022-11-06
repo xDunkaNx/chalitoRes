@@ -53,9 +53,17 @@ class RoleController extends Controller
             throw $th;
         }
     }
-    function getAllRoleForSupport () {
+    function getAllRoleForSupport (Request $request) {
         try {
-            return Role::get();
+            if ($request["idUser"] == 0) {
+                $rols = Role::get();
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'rols' => $rols
+                ]);
+            }else {
+                var_dump("devolver roles ordenandos donde primero seria el rol del idUser recibido");
+            }
         } catch (\Throwable $th) {
             throw $th;
         }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -37,7 +38,7 @@ Route::get('/logOut',[AuthController::class, 'logOut'])->middleware(["auth:api",
 // Route::group(['middleware' => ["auth:api", "role:Admin"]], function() {
     Route::get('/infoUser',[AuthController::class, 'infoUser'])->middleware(["auth:api","permission:infoUser,api"]);
     
-    Route::post('/register',[UserController::class, 'register'])->middleware(["auth:api","permission:register,api"]);
+    Route::post('/createOrUpdateUser',[UserController::class, 'createOrUpdateUser'])->middleware(["auth:api","permission:createOrUpdateUser,api"]);
     Route::get('/getAllUser',[UserController::class, 'getAllUser'])->middleware(["auth:api","permission:getAllUser,api"]);
     //Route::get('/{idUser}',[UserController::class, 'getUser'])->middleware(["auth:api","permission:getUser,api"]);
    // Route::delete('/{idUser}',[UserController::class, 'deleteUser'])->middleware(["auth:api","permission:deleteUser,api"]);
@@ -55,6 +56,10 @@ Route::get('/logOut',[AuthController::class, 'logOut'])->middleware(["auth:api",
     Route::post('/createRole',[RoleController::class, 'createRole'])->middleware(["auth:api","permission:createRole,api"]);
     Route::post('/assigRoleToUser',[RoleController::class, 'assigRoleToUser'])->middleware(["auth:api","permission:assigRoleToUser,api"]);
     Route::post('/assigPermissionToRole',[RoleController::class, 'assigPermissionToRole'])->middleware(["auth:api","permission:assigPermissionToRole,api"]);
+
+    Route::get('/getAllDocumentType',[PersonController::class, 'getAllDocumentType'])->middleware(["auth:api","permission:getAllDocumentType,api"]);
+
+    Route::get('/getAllRoleForSupport',[RoleController::class, 'getAllRoleForSupport'])->middleware(["auth:api","permission:getAllRoleForSupport,api"]);
 // });
 
 

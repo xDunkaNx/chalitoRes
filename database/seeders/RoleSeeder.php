@@ -40,6 +40,8 @@ class RoleSeeder extends Seeder
       Permission::create(["name" => 'assigPermissionToRole'])->assignRole($roleAdmin);
       Permission::create(["name" => 'assigRoleToUser'])->assignRole($roleAdmin);
 
+      Permission::create(["name" => 'getAllDocumentType'])->assignRole($roleAdmin);
+
       Permission::create(["name" => 'infoUser'])->syncRoles([$roleAdmin, $roleCajero, $roleCosinero, $roleMesero]);
     }
 }
