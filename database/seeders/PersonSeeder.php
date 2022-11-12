@@ -35,6 +35,25 @@ class PersonSeeder extends Seeder
         ]
         );
         Person::create([
+            'personName' => "Harold",
+            'personMiddleName' => "Gianpierre",
+            'personLastName' => "Guerrero Bello",
+            'status' => 1,
+            'typeDocument' => "DNI",
+            'document' => "12345678",
+            'ruc' => "",
+            'razonSocial' => "",
+            'dob' => "1988-04-12",
+            'age' => "34",
+            'email' => "harold.guerrero@hotmail.com",
+            'phone' => "123456789",
+            'cellPhone' => "123456789",
+            'address' => "Rimac",
+            'contactName' => "",
+            'contactPhone' => ""
+        ]
+        );
+        Person::create([
             'personName' => "carlos",
             'personMiddleName' => "eli",
             'personLastName' => "mendocilla ponce",

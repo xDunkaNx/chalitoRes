@@ -37,27 +37,28 @@ class PersonController extends Controller
             throw $th;
         }
     }
-    function getAllDocumentType (Request $request)  {
+    function getAllDocumentType ($idPerson)  {
         try {
-            if ($request['idPerson'] == 0) {
-                $stringResp = "";
-                $a_resp = array();
-                    $result = DB::table('persons')
-                    ->select(DB::raw('SUBSTRING(COLUMN_TYPE, 6, LENGTH(COLUMN_TYPE) - 6) AS val'))
-                    ->from('information_schema.COLUMNS')
-                    ->where( 'TABLE_NAME', '=', "persons")
-                    ->where( 'COLUMN_NAME', '=', "typeDocument")
-                    ->get();
-                    $stringResp = $result[0]->val;
-                    //convertimos la cadena a un arreglo de opciones segun las concidencias pasadas en los parametros
-                    $a_resp = str_getcsv($stringResp, ',', "'");
-                    return response()->json([
-                        'status' => SELF::STATUS_TRUE,
-                        'typeDocuments' => $a_resp
-                    ]);
-            }else {
-                var_dump("se tiene que regresar la lista de documentos ordenada segun el id de la persona");
+            $a_resp =  SELF::a_DOCUMENT_TYPE_PERSON;
+            if($idPerson > 0 ){
+                $o_person = Person::find($idPerson);
+                if(is_null($o_person)) {
+                    $a_resp =  [];
+                } else {
+                    foreach ($a_resp as $key => $valor) {
+                        if($valor['value'] == $o_person->typeDocument){
+                            $a_resp[$key]['selected'] = true;
+                        } else {
+                            $a_resp[$key]['selected'] = false;
+                        }
+                    }
+                }
             }
+            
+            return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'typeDocuments' => $a_resp
+            ]);
      
         } catch (\Throwable $th) {
             throw $th;
