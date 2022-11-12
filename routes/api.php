@@ -57,7 +57,7 @@ Route::get('/logOut',[AuthController::class, 'logOut'])->middleware(["auth:api",
     Route::post('/assigRoleToUser',[RoleController::class, 'assigRoleToUser'])->middleware(["auth:api","permission:assigRoleToUser,api"]);
     Route::post('/assigPermissionToRole',[RoleController::class, 'assigPermissionToRole'])->middleware(["auth:api","permission:assigPermissionToRole,api"]);
 
-    Route::get('/getAllDocumentType',[PersonController::class, 'getAllDocumentType'])->middleware(["auth:api","permission:getAllDocumentType,api"]);
+    Route::get('/getAllDocumentType/{idPerson}',[PersonController::class, 'getAllDocumentType'])->middleware(["auth:api","permission:getAllDocumentType,api"]);
 
     Route::get('/getAllRoleForSupport',[RoleController::class, 'getAllRoleForSupport'])->middleware(["auth:api","permission:getAllRoleForSupport,api"]);
 // });
