@@ -7,13 +7,13 @@ use App\Models\Person;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
     public function createOrUpdateUser(Request $request)
     {
         try {
-            // var_dump($request);die;
             $validatedData = $request->validate([
                         'idRole' => 'required|numeric'
                     , 'userName' => 'required|string|max:255'
@@ -27,7 +27,6 @@ class UserController extends Controller
                        , 'email' => 'required|email'
                    , 'cellPhone' => 'required|numeric'
             ]);
-
             $userNameSearch = DB::table('users')->where("userName","=", $validatedData["userName"])->first();
             if (isset($userNameSearch)) {
                 return response()->json([
@@ -35,8 +34,7 @@ class UserController extends Controller
                     'msg' => "el nombre del usuario ya existe"
                 ]);
             }
-
-            $documentSearch = DB::table('Persons')->where("typeDocument","=", $validatedData["typeDocument"])->and_where("document", "=", $validatedData["document"])->first();
+            $documentSearch = DB::table('Persons')->where("typeDocument","=", $validatedData["typeDocument"])->where("document", "=", $validatedData["document"])->first();
             if (isset($documentSearch)) {
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
@@ -63,16 +61,15 @@ class UserController extends Controller
                 'contactPhone' => array_key_exists('contactPhone', $validatedData) ? $validatedData['contactPhone'] : NULL,
                 'status' => SELF::STATUS_TRUE,
             ]);
+            //$person->save();
             $idRole = $validatedData['idRole'];
             $roleName = DB::table('roles')->select("name")->where("id","=", $idRole)->first();
-
-            $user = User::create([
-                'id' => $person->id,
-                'userName' => $validatedData['userName'],
-                'password' => Hash::make($validatedData['password'])
-            ])->assignRole($roleName->name);
-            
-            $token = $user->createToken('authToken')->accessToken;
+            $user = new User;
+            $user->idUser = $person->id;
+            $user->userName = $validatedData['userName'];
+            $user->password = Hash::make($validatedData['password']); 
+            $user->save();
+            $token = $user->assignRole($roleName->name)->createToken('authToken')->accessToken;
             DB::commit();
             return response()->json([
                 'status' => SELF::STATUS_TRUE,
