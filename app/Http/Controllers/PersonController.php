@@ -42,9 +42,7 @@ class PersonController extends Controller
             $a_resp =  SELF::a_DOCUMENT_TYPE_PERSON;
             if($idPerson > 0 ){
                 $o_person = Person::find($idPerson);
-                if(is_null($o_person)) {
-                    $a_resp =  [];
-                } else {
+                if(!is_null($o_person)) {
                     foreach ($a_resp as $key => $valor) {
                         if($valor['value'] == $o_person->typeDocument){
                             $a_resp[$key]['selected'] = true;

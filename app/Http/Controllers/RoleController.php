@@ -53,25 +53,29 @@ class RoleController extends Controller
             throw $th;
         }
     }
-    function getAllRoleForSupport (Request $request) {
+    function getAllRoleForSupport () {
         try {
-            if ($request["idUser"] == 0) {
                 $rols = Role::get();
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
                     'rols' => $rols
                 ]);
-            }else {
-                var_dump("devolver roles ordenandos donde primero seria el rol del idUser recibido");
-            }
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-    function getAllRole ()  {
+    function getAllRole ($idUser)  {
         try {
+                if($idUser > 0){
+                    $user = DB::table('users')->where("id","=", $request["idUser"])->first();
+                } else {
+
+                }
             $allRole = Role::where("status", "=", self::STATUS_TRUE)->get();
-            return $allRole;
+            return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'rols' => $allRole
+            ]);
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -79,7 +83,7 @@ class RoleController extends Controller
     function getRole (Request $request)  {
         try {
             $validatedData = $request->validate(['idRole' => 'required|numeric']);
-            $allRole = Role::where("isActive", '=', self::STATUS_TRUE)->and_where("status", "=", self::STATUS_TRUE)->and_where("id", "=", $validatedData['idRole'])->get();
+            $allRole = Role::where("isActive", '=', self::STATUS_TRUE)->where("status", "=", self::STATUS_TRUE)->where("id", "=", $validatedData['idRole'])->get();
             return $allRole;
         } catch (\Throwable $th) {
             throw $th;

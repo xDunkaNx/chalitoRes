@@ -20,21 +20,21 @@ class Controller extends BaseController
     CONST DOCUMENT_TYPE_PERSON_CARNET = "CARNET";
 
     const a_DOCUMENT_TYPE_PERSON = [
-        SELF::DOCUMENT_TYPE_PERSON_DNI => [
+        [
             "name" => SELF::DOCUMENT_TYPE_PERSON_DNI,
             "shortName" => "DNI",
             "value" => SELF::DOCUMENT_TYPE_PERSON_DNI,
             "default" => true,
             "selected" => false
         ],
-        SELF::DOCUMENT_TYPE_PERSON_PASAPORTE => [
+        [
             "name" => SELF::DOCUMENT_TYPE_PERSON_PASAPORTE,
             "shortName" => "PAS",
             "value" => SELF::DOCUMENT_TYPE_PERSON_PASAPORTE,
             "default" => false,
             "selected" => false
         ],
-        SELF::DOCUMENT_TYPE_PERSON_CARNET => [
+        [
             "name" => SELF::DOCUMENT_TYPE_PERSON_CARNET,
             "shortName" => "CAR",
             "value" => SELF::DOCUMENT_TYPE_PERSON_CARNET,

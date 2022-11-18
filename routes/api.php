@@ -59,7 +59,7 @@ Route::get('/logOut',[AuthController::class, 'logOut'])->middleware(["auth:api",
 
     Route::get('/getAllDocumentType/{idPerson}',[PersonController::class, 'getAllDocumentType'])->middleware(["auth:api","permission:getAllDocumentType,api"]);
 
-    Route::get('/getAllRoleForSupport',[RoleController::class, 'getAllRoleForSupport'])->middleware(["auth:api","permission:getAllRoleForSupport,api"]);
+    Route::get('/getAllRole/{idUser}',[RoleController::class, 'getAllRole'])->middleware(["auth:api","permission:getAllRole,api"]);
 // });
 
 
