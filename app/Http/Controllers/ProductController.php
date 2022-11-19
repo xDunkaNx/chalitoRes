@@ -69,7 +69,48 @@ class ProductController extends Controller
         }
 
     }
-    function getProduct ()  {
+    function getProduct (Request $request)  {
+        try {
+            $validatedData = $request->validate([
+                'idProduct' => 'required|numeric'
+            ]);
+
+            $product = DB::table('products')->where("id","=",$validatedData["idProduct"])->where("isActive","=", SELF::STATUS_TRUE)->where("status","=", SELF::STATUS_TRUE)->first();
+            if (isset($product)) {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'products' => $product
+                ]);
+            }else{
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "Id de producto no encontrado"
+                ]);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    function getAllProduct ()  {
+        try {
+            $product = DB::table('products')->where("status","=", SELF::STATUS_TRUE)->get();
+
+            if (isset($product)) {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'products' => $product
+                ]);
+            } else {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'products' => "No existen prodcutos"
+                ]);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    function getAllProductSupport ()  {
         try {
             $allproduct = Product::get();
             return response()->json([
@@ -84,17 +125,58 @@ class ProductController extends Controller
     function deleteProduct (Request $request) {
         try {
             $validatedData = $request->validate([
-                'idProduct' => 'required|numeric', 
+                'idProduct' => 'required|numeric'
             ]);
+
             $idProduct = Product::find($validatedData["idProduct"]);
-            if ($idProduct == null) {
-               return 'el ID del producto no existe';
+
+            if (isset($idProduct)) {
+                $idProduct->status = SELF::STATUS_FALSE;
+                $idProduct->save();
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "Id Producto eliminado correctamente"
+                ]);
+            } else {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "Id Producto no encontrado"
+                ]);
             }
-            else 
-            {
-                //var_dump($idProduct);die;
-                $idProduct->delete();
-                return 'Eliminaste el Producto correctamente';
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    function deactiveOrActiveProduct(Request $request){
+        try {
+            $validatedData = $request->validate([
+                'idProduct' => 'required|numeric'
+                ,'status' => 'required|boolean'
+            ]);
+
+            $product = Product::find($validatedData["idProduct"]);
+            if (isset($product)) {
+                if ($validatedData["status"]) {
+                    $product->isActive = SELF::IS_ACTIVE;
+                    $product->save();
+                    return response()->json([
+                        'status' => SELF::STATUS_TRUE,
+                        'msg' => "Se activo el producto correctamente"
+                    ]);
+                } else {
+                    $product->isActive = SELF::IS_DEACTIVE;
+                    $product->save();
+                    return response()->json([
+                        'status' => SELF::STATUS_TRUE,
+                        'msg' => "Se desactivo el producto correctamente"
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "ID producto no encontrado"
+                ]);
             }
         } catch (\Throwable $th) {
             throw $th;

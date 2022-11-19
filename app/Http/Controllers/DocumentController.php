@@ -12,8 +12,8 @@ class DocumentController extends Controller
             if ($request["idDocument"] == null) {
                 $document = new Document;
                 $document->documentName = $request["documentName"];
-                $document->isActive = 1; 
-                $document->status = 1;
+                $document->isActive = SELF::STATUS_TRUE; 
+                $document->status = SELF::STATUS_TRUE;
                 $respuesta = $document->save();
                 return $respuesta;
             }

@@ -27,7 +27,7 @@ class RoleSeeder extends Seeder
       Permission::create(["name" => 'getAllUser'])->assignRole($roleAdmin);
       Permission::create(["name" => 'getUser'])->assignRole($roleAdmin);
       Permission::create(["name" => 'deleteUser'])->assignRole($roleAdmin);
-      Permission::create(["name" => 'changeStatusUser'])->assignRole($roleAdmin);
+      Permission::create(["name" => 'deactiveOrActiveUser'])->assignRole($roleAdmin);
 
       Permission::create(["name" => 'createOrUpdateCategory'])->assignRole($roleAdmin);
       Permission::create(["name" => 'getCategory'])->assignRole($roleAdmin);

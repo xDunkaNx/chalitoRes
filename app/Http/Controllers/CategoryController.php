@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -35,10 +36,65 @@ class CategoryController extends Controller
         }
     }
     function deactivateCategory (Request $request) {
-        //creo que deberia poderc desactivar la categoria cambiando de status y ver si los platos que estan relacionados a esa
-        //categoria tambien se desactivan
         try {
+            $validatedData = $request->validate([
+                'idCategory' => 'required|numeric'
+            ]);
 
+            $category = Category::find($validatedData['idCategory']);
+
+            if(empty($category)){
+                $category->isActive = SELF::STATUS_FALSE;
+                $category->save();
+
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "Categoria desactivada correctamente"
+                ]);
+                /* NOTA
+                 * No es necesario desactivar todos los productos de la categoria, debido que en el listado de productos validamos
+                 * el estado de la categoria tambien. 
+                 * LO QUE SE PUEDE HACER ES CREAR UN TEMA DE NOTIFICACIONES, EL CUAL SE ENVIA UNA NOTIFICACION A LOS ADMINISTRADORES QUE 
+                 * LA CATEOGIRA TAL FUE DESACTIVADA Y ALGUNOS PRODUCTOS YA NO SE MOSTRARAN PARA LA VENTA
+                 */
+            } else {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "No se encontro la categoria a desactivar"
+                ]);
+            }
+        } catch (Throwable $th) {
+            return $th;
+        }
+    }
+    function deleteCategory (Request $request) {
+        try {
+            $validatedData = $request->validate(['idCategory' => 'required|numeric']);
+
+            $category = Category::find($validatedData['idCategory']);
+
+            if(empty($category)){
+                $Products = Product::where("idCategory", "=", $validatedData['idCategory'])->get();
+                if(count($Products) > 0){
+                    return response()->json([
+                        'status' => SELF::STATUS_TRUE,
+                        'msg' => "La categoria a eliminar tiene productos relacionados"
+                    ]);
+                } else {
+                    $category->status = SELF::STATUS_FALSE;
+                    $category->save();
+    
+                    return response()->json([
+                        'status' => SELF::STATUS_TRUE,
+                        'msg' => "Categoria eliminada correctamente"
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'msg' => "No se encontro la categoria a eliminar"
+                ]);
+            }
         } catch (Throwable $th) {
             return $th;
         }
@@ -53,14 +109,23 @@ class CategoryController extends Controller
     }
     function getAllCategoryForSupport ()  {
         try {
-            return Category::get();
+            $categories = Category::get();
+
+            return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'categories' => $categories
+            ]);   
         } catch (\Throwable $th) {
             throw $th;
         }
     }
     function getAllCategory (Request $request)  {
         try {
-            $validatedData = $request->validate(['idCategory' => 'numeric']);
+            $validatedData = $request->validate([
+                'idCategory' => 'requerid|numeric'
+            ]);
+            
+            $categories  = Category::where("status", '=', self::STATUS_TRUE)->get();
             if ($validatedData['idCategory'] != 0) {
                 $idCategory = $validatedData["idCategory"];
                 //usar 'raw' es peligroso por la sql inyeccion, hay otra manera mas eficiente con selectRaw, pero aun estoy revisando la doc.
@@ -68,28 +133,26 @@ class CategoryController extends Controller
                 ->select('id','categoryName', DB::raw("IF(id={$idCategory},1,2) as orden"))
                 ->orderBy('orden', 'asc')
                 ->get();
-                return response()->json([
-                    'status' => SELF::STATUS_TRUE,
-                    'categories' => $categories
-                ]);
-            }       
-            else{
-               $categories  = Category::select('id','categoryName')->get();
-               return response()->json([
+            }
+            return response()->json([
                 'status' => SELF::STATUS_TRUE,
                 'categories' => $categories
-            ]);
-                
-            }
-            return Category::where("status", '=', self::STATUS_TRUE)->get();
+            ]);                
         } catch (\Throwable $th) {
             throw $th;
         }
     }
     function getCategory (Request $request) {
         try {
-            $validatedData = $request->validate(['idCategory' => 'required|numeric']);
-            return DB::table('categories')->where("isActive", '=', self::STATUS_TRUE)->where("status", "=", self::STATUS_TRUE)->where("id", "=", $validatedData['idCategory'])->get();
+            $validatedData = $request->validate([
+                'idCategory' => 'required|numeric'
+            ]);
+            $categories = DB::table('categories')->where("isActive", '=', self::STATUS_TRUE)->where("status", "=", self::STATUS_TRUE)->where("id", "=", $validatedData['idCategory'])->first();
+            return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'categories' => $categories
+            ]);                
+            
         } catch (\Throwable $th) {
             throw $th;
         }

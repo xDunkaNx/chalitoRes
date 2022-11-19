@@ -71,8 +71,7 @@ class CashBoxController extends Controller
               $cashBox->idAdmin = $admin->idUser;
               $cashBox->closeDate = '2022-12-31';
               $cashBox->statusCashBox = 'Cerrado';
-              $response = $cashBox->save();
-              return $response;
+              $cashBox->save();
             } else {
               return response()->json([
                 'status' => SELF::STATUS_TRUE,
@@ -100,17 +99,28 @@ class CashBoxController extends Controller
     }
     function getAllCashBox ()  {
       try {
-        $allCategory = CashBox::where("status", "=", self::STATUS_TRUE)->get();
-        return $allCategory;
+          $allCategory = CashBox::where("status", "=", self::STATUS_TRUE)->get();
+          
+          return response()->json([
+            'status' => SELF::STATUS_TRUE,
+            'cashbox' => $allCategory
+          ]);
       } catch (\Throwable $th) {
         throw $th;
       }
     }
     function getCashBoxForUser (Request $request)  {
       try {
-        $validatedData = $request->validate(['idUser' => 'required|numeric']);
-        $allCategory = CashBox::where("isActive", '=', self::STATUS_TRUE)->and_where("status", "=", self::STATUS_TRUE)->and_where("idUser", "=", $validatedData['idUser'])->get();
-        return $allCategory;
+          $validatedData = $request->validate([
+            'idUser' => 'required|numeric'
+          ]);
+
+          $category = CashBox::where("isActive", '=', self::STATUS_TRUE)->where("status", "=", self::STATUS_TRUE)->where("idUser", "=", $validatedData['idUser'])->first();
+
+          return response()->json([
+            'status' => SELF::STATUS_TRUE,
+            'cashbox' => $category
+          ]);
       } catch (\Throwable $th) {
         throw $th;
       }

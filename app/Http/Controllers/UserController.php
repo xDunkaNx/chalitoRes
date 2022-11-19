@@ -81,9 +81,20 @@ class UserController extends Controller
             throw $th;
         }
     }
+    public function getAllUserSupport(){
+        try {
+            $users = Users::get();
+            return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'users' => $users
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
     public function getAllUser(){
         try {
-            $users = DB::table('users')->where("isActive", '=', self::STATUS_TRUE)->get();
+            $users = DB::table('users')->where("status", '=', self::STATUS_TRUE)->get();
             return response()->json([
                 'status' => SELF::STATUS_TRUE,
                 'users' => $users
@@ -94,8 +105,11 @@ class UserController extends Controller
     }
     public function getUser(Request $request){
         try {
+            $validatedData = $request->validate([
+                'idUser' => 'required|numeric'
+            ]);
 
-            $user = DB::table('users')->where("id","=",$request["idUser"])->first();
+            $user = DB::table('users')->where("id","=",$validatedData["idUser"])->where("isActive","=", SELF::STATUS_TRUE)->where("status","=", SELF::STATUS_TRUE)->first();
             if (isset($user)) {
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
@@ -104,7 +118,7 @@ class UserController extends Controller
             }else{
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
-                    'users' => "Id de usuario no encontrado"
+                    'msg' => "Id de usuario no encontrado"
                 ]);
             }
         } catch (\Throwable $th) {
@@ -113,10 +127,14 @@ class UserController extends Controller
     }
     public function deleteUser(Request $request){
         try {
+            $validatedData = $request->validate([
+                'idUser' => 'required|numeric'
+            ]);
 
-            $user = User::find($request["id"]);
+            $user = User::find($request["idUser"]);
             if (isset($user)) {
-                $user->delete();
+                $user->status = SELF::IS_DEACTIVE;
+                $user->save();
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
                     'msg' => "Usuario eliminado correctamente"
@@ -124,30 +142,32 @@ class UserController extends Controller
             }else{
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
-                    'users' => "Id de usuario no encontrado"
+                    'msg' => "Id de usuario no encontrado"
                 ]);
             }
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-    public function changeStatusUser(Request $request){
+    public function deactiveOrActiveUser(Request $request){
         try {
+            $validatedData = $request->validate([
+                'idUser' => 'required|numeric'
+                ,'status' => 'required|boolean'
+            ]);
 
-            $user = User::find($request["idUser"]);
+            $user = User::find($validatedData["idUser"]);
             if (isset($user)) {
-                if ($request["status"]) {
-                    DB::table('users')
-                    ->where('id',"=", $request["idUser"])
-                    ->update(['status' => SELF::STATUS_TRUE]);
+                if ($validatedData["status"]) {
+                    $user->isActive = SELF::IS_ACTIVE;
+                    $user->save();
                     return response()->json([
                         'status' => SELF::STATUS_TRUE,
                         'msg' => "Se activo el usuario correctamente"
                     ]);
                 }else{
-                    DB::table('users')
-                    ->where('id',"=", $request["idUser"])
-                    ->update(['status' => SELF::STATUS_FALSE]);
+                    $user->isActive = SELF::IS_DEACTIVE;
+                    $user->save();
                     return response()->json([
                         'status' => SELF::STATUS_TRUE,
                         'msg' => "Se desactivo el usuario correctamente"
@@ -156,7 +176,7 @@ class UserController extends Controller
             }else{
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
-                    'users' => "Id de usuario no encontrado"
+                    'msg' => "Usuario no encontrado"
                 ]);
             }
         } catch (\Throwable $th) {

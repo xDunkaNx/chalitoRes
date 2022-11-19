@@ -64,20 +64,59 @@ class TableController extends Controller
         }
 
     }
-    public function getTable ()  {
+    public function getAllTableSupport ()  {
         try {
             $allTable = Table::get();
-            return $allTable;
+            return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'tables' => $allTable
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    public function getAllTable ()  {
+        try {
+            $allTable = DB::table('tables')->where("status", '=', self::STATUS_TRUE)->get();
+            return response()->json([
+                'status' => SELF::STATUS_TRUE,
+                'tables' => $allTable
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    public function getTable (Request $request)  {
+        try {
+            $validatedData = $request->validate([
+                'idTable' => 'required|numeric'
+            ]);
+
+            $table = DB::table('tables')->where("id","=",$validatedData["idTable"])->where("isActive","=", SELF::STATUS_TRUE)->where("status","=", SELF::STATUS_TRUE)->first();
+            if (isset($table)) {
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'tables' => $table
+                ]);
+            }else{
+                return response()->json([
+                    'status' => SELF::STATUS_TRUE,
+                    'tables' => "Id de mesa no encontrada"
+                ]);
+            }
         } catch (\Throwable $th) {
             throw $th;
         }
     }
     public function deleteTable(Request $request){
         try {
-
-            $table = Table::find($request["idTable"]);
+            $validatedData = $request->validate([
+                'idTable' => 'required|numeric'
+            ]);
+            $table = Table::find($validatedData["idTable"]);
             if (isset($table)) {
-                $table->delete();
+                $table->status = SELF::IS_DEACTIVE;
+                $table->save();
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
                     'msg' => "Mesa eliminada correctamente"
@@ -92,23 +131,25 @@ class TableController extends Controller
             throw $th;
         }
     }
-    public function changeStatusTable(Request $request){
+    public function deactiveOrActiveTable(Request $request){
         try {
+            $validatedData = $request->validate([
+                'idTable' => 'required|numeric'
+                ,'status' => 'required|boolean'
+            ]);
 
-            $table = Table::find($request["idTable"]);
+            $table = Table::find($validatedData["idTable"]);
             if (isset($table)) {
-                if ($request["status"]) {
-                    DB::table('tables')
-                    ->where('idTable',"=", $request["idTable"])
-                    ->update(['status' => SELF::STATUS_TRUE]);
+                if ($validatedData["status"]) {
+                    $table->isActive = SELF::IS_ACTIVE;
+                    $table->save();
                     return response()->json([
                         'status' => SELF::STATUS_TRUE,
                         'msg' => "Se activo la mesa correctamente"
                     ]);
                 }else{
-                    DB::table('tables')
-                    ->where('idTable',"=", $request["idTable"])
-                    ->update(['status' => SELF::STATUS_FALSE]);
+                    $table->isActive = SELF::IS_DEACTIVE;
+                    $table->save();
                     return response()->json([
                         'status' => SELF::STATUS_TRUE,
                         'msg' => "Se desactivo la mesa correctamente"
@@ -117,7 +158,7 @@ class TableController extends Controller
             }else{
                 return response()->json([
                     'status' => SELF::STATUS_TRUE,
-                    'tables' => "Id de mesa no encontrada"
+                    'msg' => "Id de mesa no encontrada"
                 ]);
             }
         } catch (\Throwable $th) {
